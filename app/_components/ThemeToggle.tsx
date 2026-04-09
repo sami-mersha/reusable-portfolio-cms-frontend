@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -17,6 +17,7 @@ export default function ThemeToggle() {
   );
 
   const isDark = mounted && resolvedTheme === "dark";
+  const nextTheme = theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
 
   return (
     <Button
@@ -24,8 +25,8 @@ export default function ThemeToggle() {
       variant="outline"
       size="icon"
       className="relative border-border/60 bg-background/65 backdrop-blur-sm"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={mounted && isDark ? "Switch to light mode" : "Switch to dark mode"}
+      onClick={() => setTheme(nextTheme)}
+      aria-label={mounted ? `Switch to ${nextTheme === "system" ? "system" : nextTheme} mode` : "Switch theme"}
     >
       <SunMedium
         className={cn(

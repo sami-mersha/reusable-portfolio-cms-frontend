@@ -45,7 +45,7 @@ export default function ResumesSection({ resumes }: { resumes: Resume[] }) {
           <CardContent>
             {resumes[0] && (
               <Button variant="secondary" size="lg" asChild className="w-full sm:w-auto">
-                <Link href={resumes[0].file_url} target="_blank" rel="noopener noreferrer">
+                <Link href={resumes[0].file_url} download>
                   <Download className="size-4" />
                   Download Latest Resume
                 </Link>
@@ -73,7 +73,7 @@ export default function ResumesSection({ resumes }: { resumes: Resume[] }) {
                   </div>
                 </div>
                 <Button variant="outline" asChild className="w-full sm:w-auto">
-                  <Link href={resume.file_url} target="_blank" rel="noopener noreferrer">
+                  <Link href={resume.file_url} download>
                     Download
                   </Link>
                 </Button>

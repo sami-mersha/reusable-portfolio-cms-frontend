@@ -45,7 +45,7 @@ export default function Certificates({
         {certificates.map((cert) => (
           <Card
             key={cert.id}
-            className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45"
+            className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45 hover:scale-102 transition-transform duration-300"
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image

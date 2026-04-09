@@ -8,6 +8,7 @@ import Skills from './_components/Skills';
 import Certificates from './_components/Certificates';
 import ResumesSection from './_components/Resumes';
 import { getPortfolio } from './_lib/portfolio';
+import { buildPortfolioJsonLd, serializeJsonLd } from './_lib/seo';
 
 export default async function HomePage() {
   try {
@@ -15,22 +16,29 @@ export default async function HomePage() {
     const currentRole =
       data.experiences.find((experience) => experience.is_current)?.role ??
       "Software Engineer";
+    const jsonLd = buildPortfolioJsonLd(data);
 
     return (
-      <div className="space-y-20 pb-16 sm:space-y-24 lg:space-y-28 lg:pb-20">
-        <Hero
-          profile={data.profile}
-          featuredProjectsCount={data.featured_projects.length}
-          totalSkillsCount={data.skills.length}
-          careerChaptersCount={data.experiences.length}
-          currentRole={currentRole}
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
-        <FeaturedProjects projects={data.featured_projects} />
-        <Experiences experiences={data.experiences} />
-        <Skills skills={data.skills} />
-        <Certificates certificates={data.certificates} />
-        <ResumesSection resumes={data.resumes} />
-      </div>
+        <div className="space-y-20 pb-16 sm:space-y-24 lg:space-y-28 lg:pb-20">
+          <Hero
+            profile={data.profile}
+            featuredProjectsCount={data.featured_projects.length}
+            totalSkillsCount={data.skills.length}
+            careerChaptersCount={data.experiences.length}
+            currentRole={currentRole}
+          />
+          <FeaturedProjects projects={data.featured_projects} />
+          <Experiences experiences={data.experiences} />
+          <Skills skills={data.skills} />
+          <Certificates certificates={data.certificates} />
+          <ResumesSection resumes={data.resumes} />
+        </div>
+      </>
     );
   } catch (err) {
     console.error("Failed to load homepage portfolio data:", err);

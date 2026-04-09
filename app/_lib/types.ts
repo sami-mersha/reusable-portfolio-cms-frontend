@@ -1,5 +1,3 @@
-// app/_lib/types.ts
-
 export interface Profile {
   id: number;
   name: string;
@@ -7,10 +5,15 @@ export interface Profile {
   tagline: string;
   bio: string;
   location: string;
-  github_url: string;
-  linkedin_url: string;
+  github_url: string | null;
+  linkedin_url: string | null;
+  linktree_url: string | null;
+  email: string | null;
+  phone: string | null;
   image: string;
+  favicon: string | null;
   image_url: string;
+  favicon_url: string | null;
   created_at: string;
   updated_at: string;
 }

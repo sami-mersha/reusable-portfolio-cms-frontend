@@ -1,7 +1,16 @@
 // app/_components/Hero.tsx
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, Layers3, MapPin } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Layers3,
+  Link2,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 
 import { Profile } from "../_lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +32,59 @@ export default function Hero({
   careerChaptersCount,
   currentRole,
 }: HeroProps) {
+  const socialLinks: Array<{
+    href: string;
+    label: string;
+    variant: "secondary" | "ghost";
+    icon?: ReactNode;
+  }> = [];
+
+  if (profile.linktree_url) {
+    socialLinks.push({
+      href: profile.linktree_url,
+      label: "All Socials",
+      variant: "secondary",
+      icon: <Link2 className="size-4" />,
+    });
+  }
+
+  if (profile.linkedin_url) {
+    socialLinks.push({
+      href: profile.linkedin_url,
+      label: "LinkedIn",
+      variant: "ghost",
+    });
+  }
+
+  if (profile.github_url) {
+    socialLinks.push({
+      href: profile.github_url,
+      label: "GitHub",
+      variant: "ghost",
+    });
+  }
+
+  const contactLinks: Array<{
+    href: string;
+    label: string;
+    icon: ReactNode;
+  }> = [];
+
+  if (profile.email) {
+    contactLinks.push({
+      href: `mailto:${profile.email}`,
+      label: profile.email,
+      icon: <Mail className="size-4 text-primary" />,
+    });
+  }
+
+  if (profile.phone) {
+    contactLinks.push({
+      href: `tel:${profile.phone}`,
+      label: profile.phone,
+      icon: <Phone className="size-4 text-primary" />,
+    });
+  }
 
   return (
     <section id="hero" className="mx-auto max-w-6xl px-4 pb-6 pt-8 sm:pt-10 md:pt-14">
@@ -32,17 +94,19 @@ export default function Hero({
             variant="outline"
             className="w-fit border-primary/25 bg-primary/10 text-primary"
           >
-            Software Engineer / Portfolio
+            {profile.title || "Portfolio"}
           </Badge>
 
           <div className="space-y-5">
             <p className="text-sm uppercase tracking-[0.28em] text-muted-foreground">
-              Addis Ababa, Ethiopia
+              {profile.location}
             </p>
             <h1 className="text-shadow-soft max-w-4xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-7xl">
-              Building dependable digital products with clarity, craft, and calm
-              execution.
+              {profile.name}
             </h1>
+            <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+              {profile.tagline}
+            </p>
             <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
               {profile.bio}
             </p>
@@ -55,16 +119,33 @@ export default function Hero({
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
-            <Button variant="secondary" size="lg" asChild className="w-full sm:w-auto">
-              <Link href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
-                LinkedIn
-              </Link>
-            </Button>
-            <Button variant="ghost" size="lg" asChild className="w-full sm:w-auto">
-              <Link href={profile.github_url} target="_blank" rel="noopener noreferrer">
-                GitHub
-              </Link>
-            </Button>
+            {socialLinks.map((link) => (
+              <Button
+                key={link.href}
+                variant={link.variant}
+                size="lg"
+                asChild
+                className="w-full sm:w-auto"
+              >
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.icon}
+                  {link.label}
+                </a>
+              </Button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center">
+            {contactLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="inline-flex items-center gap-2 transition hover:text-foreground"
+              >
+                {link.icon}
+                {link.label}
+              </a>
+            ))}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">

@@ -67,7 +67,11 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
               </div>
 
               <CardHeader className="space-y-3">
-                <CardTitle className="text-2xl">{project.title}</CardTitle>
+                <CardTitle className="text-2xl">
+                  <Link href={`/projects/${project.slug}`} className="transition hover:text-primary">
+                    {project.title}
+                  </Link>
+                </CardTitle>
                 <CardDescription className="text-base leading-7">
                   {project.description}
                 </CardDescription>
@@ -115,14 +119,12 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
                     </Link>
                   </Button>
                 )}
-                {project.live_url && (
-                  <Button variant="ghost" asChild className="w-full sm:w-auto">
-                    <Link href={project.live_url} target="_blank" rel="noopener noreferrer">
-                      Details
-                      <ArrowUpRight className="size-4" />
-                    </Link>
-                  </Button>
-                )}
+                <Button variant="ghost" asChild className="w-full sm:w-auto">
+                  <Link href={`/projects/${project.slug}`}>
+                    Details
+                    <ArrowUpRight className="size-4" />
+                  </Link>
+                </Button>
               </CardFooter>
             </Card>
           );

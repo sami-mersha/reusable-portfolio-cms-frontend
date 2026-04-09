@@ -1,26 +1,139 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(0.985 0.008 85);
+  --foreground: oklch(0.24 0.02 255);
+  --card: oklch(0.995 0.004 85);
+  --card-foreground: oklch(0.24 0.02 255);
+  --popover: oklch(0.995 0.004 85);
+  --popover-foreground: oklch(0.24 0.02 255);
+  --primary: oklch(0.69 0.13 70);
+  --primary-foreground: oklch(0.19 0.02 250);
+  --secondary: oklch(0.95 0.012 70);
+  --secondary-foreground: oklch(0.3 0.02 255);
+  --muted: oklch(0.95 0.009 250);
+  --muted-foreground: oklch(0.5 0.018 255);
+  --accent: oklch(0.92 0.014 78);
+  --accent-foreground: oklch(0.28 0.02 255);
+  --destructive: oklch(0.63 0.2 25);
+  --destructive-foreground: oklch(0.98 0.004 85);
+  --border: oklch(0.88 0.008 255);
+  --input: oklch(0.88 0.008 255);
+  --ring: oklch(0.69 0.13 70);
+  --radius: 1.25rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.5rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.dark {
+  --background: oklch(0.18 0.02 255);
+  --foreground: oklch(0.96 0.004 85);
+  --card: oklch(0.22 0.02 255);
+  --card-foreground: oklch(0.96 0.004 85);
+  --popover: oklch(0.22 0.02 255);
+  --popover-foreground: oklch(0.96 0.004 85);
+  --primary: oklch(0.74 0.13 72);
+  --primary-foreground: oklch(0.17 0.02 255);
+  --secondary: oklch(0.28 0.018 255);
+  --secondary-foreground: oklch(0.96 0.004 85);
+  --muted: oklch(0.28 0.018 255);
+  --muted-foreground: oklch(0.72 0.012 255);
+  --accent: oklch(0.32 0.018 255);
+  --accent-foreground: oklch(0.96 0.004 85);
+  --destructive: oklch(0.68 0.18 25);
+  --destructive-foreground: oklch(0.16 0.02 255);
+  --border: oklch(0.34 0.015 255);
+  --input: oklch(0.34 0.015 255);
+  --ring: oklch(0.74 0.13 72);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 10rem;
+}
+
+@media (min-width: 1024px) {
+  section[id] {
+    scroll-margin-top: 8rem;
   }
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  overflow-x: clip;
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at top left, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 35%),
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.14) 0%, transparent 28%),
+    radial-gradient(circle at 50% 20%, rgba(251, 191, 36, 0.1) 0%, transparent 30%),
+    var(--background);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, white, transparent 85%);
+}
+
+* {
+  border-color: var(--border);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 32%, transparent);
+  color: var(--foreground);
+}
+
+.text-shadow-soft {
+  text-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+.surface-glow {
+  box-shadow: 0 18px 90px -48px rgba(15, 23, 42, 0.5);
 }

@@ -1,36 +1,255 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Reusable Portfolio CMS Frontend
 
-## Getting Started
+A modern, production-ready portfolio frontend built with **Next.js (App Router)** and **shadcn/ui**, designed to dynamically render portfolio content from a CMS backend API.
 
-First, run the development server:
+This project depends on the backend:
+
+👉 https://github.com/sami-mersha/reusable-portfolio-cms-backend
+
+---
+
+## 🚀 Overview
+
+This application is a **dynamic portfolio renderer** that consumes structured data from an API and builds a complete personal portfolio website.
+
+It is designed with:
+
+* **Separation of concerns** (Frontend ↔ Backend)
+* **Reusability** (plug different data, same UI)
+* **Scalability** (modular sections)
+* **Production-readiness** (error handling, loading states)
+
+---
+
+## 🧩 Core Features
+
+* Dynamic Hero section (profile, branding, social links)
+* Skills grouped by category
+* Experience timeline (sorted, highlight-based)
+* Featured projects showcase
+* Certificates display
+* Resume download/view
+* Responsive UI (mobile-first)
+* Dark mode support
+* Section-level error handling
+* Loading states for async rendering
+
+---
+
+## 🏗️ Tech Stack
+
+* **Next.js (App Router)**
+* **React Server Components**
+* **Tailwind CSS**
+* **shadcn/ui**
+* **TypeScript**
+
+---
+
+## 🔗 Backend Dependency
+
+This frontend **does not work standalone**.
+
+It consumes data from:
+
+👉 https://github.com/sami-mersha/reusable-portfolio-cms-backend
+
+### Key API Characteristics
+
+* Single aggregated endpoint for portfolio data
+* Media served via `/storage`
+* Structured JSON response
+* Supports:
+
+  * Profile (with favicon, contact info, linktree)
+  * Projects & Featured Projects
+  * Skills (categorized)
+  * Experiences (ordered, visibility controlled)
+  * Certificates
+  * Resumes
+
+---
+
+## ⚙️ Environment Variables
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_HOME_URL=http://localhost:3000
+NEXT_PUBLIC_DEBUG=false
+```
+
+### Description
+
+| Variable             | Purpose              |
+| -------------------- | -------------------- |
+| NEXT_PUBLIC_BASE_URL | Backend API base URL |
+| NEXT_PUBLIC_HOME_URL | Frontend base URL    |
+| NEXT_PUBLIC_DEBUG    | Enables debug logs   |
+
+---
+
+## 🛠️ Installation
+
+```bash
+git clone https://github.com/sami-mersha/reusable-portfolio-cms-frontend.git
+cd reusable-portfolio-cms-frontend
+
+npm install
+```
+
+---
+
+## ▶️ Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔄 Data Fetching Flow
 
-To learn more about Next.js, take a look at the following resources:
+1. UI sections call:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```
+   getPortfolio()
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Data is fetched from:
 
-## Deploy on Vercel
+   ```
+   {BASE_URL}/api/portfolio
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Response is mapped into:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   * Hero
+   * Skills
+   * Experience
+   * Projects
+   * Certificates
+   * Resume
+
+Each section handles its own failure independently.
+
+---
+
+## 📁 Project Structure
+
+```bash
+app/
+ ├── _components/
+ │    ├── Hero.tsx
+ │    ├── Skills.tsx
+ │    ├── Experiences.tsx
+ │    ├── Projects.tsx
+ │    ├── Certificates.tsx
+ │    ├── Resumes.tsx
+ │    ├── Header.tsx
+ │    └── Footer.tsx
+ │
+ ├── _lib/
+ │    ├── portfolio.ts   # API abstraction layer
+ │    └── types.ts       # Type definitions
+ │
+ ├── layout.tsx
+ └── page.tsx
+```
+
+---
+
+## 🧠 Design Principles
+
+### 1. Server-First Rendering
+
+* Uses async server components
+* Improves SEO and performance
+
+### 2. Centralized API Layer
+
+* All fetching logic lives in one place
+* Easy to switch backend or extend
+
+### 3. Strong Typing
+
+* Prevents runtime errors
+* Improves maintainability
+
+### 4. Fault Isolation
+
+* Each section handles:
+
+  * Errors
+  * Empty states
+  * Loading states
+
+### 5. Clean UI Architecture
+
+* Component-based layout
+* Easily extendable sections
+
+---
+
+## ⚠️ Important Notes
+
+* Backend must be running before frontend
+* Ensure backend CORS is configured
+* Media files require:
+
+  ```bash
+  php artisan storage:link
+  ```
+* Invalid or missing API data will trigger graceful UI fallbacks
+
+---
+
+## 📦 Production Build
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 🔮 Future Enhancements
+
+* Multi-tenant portfolio support
+* Dynamic routing per user
+* Theme customization
+* CMS-driven layout configuration
+* Internationalization (i18n)
+* Analytics integration
+
+---
+
+## 🤝 Contribution
+
+This project is structured for extensibility. You can contribute by:
+
+* Adding new sections (blogs, testimonials, etc.)
+* Improving UI/UX
+* Enhancing performance
+* Extending API integration
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👤 Author
+
+Samuel Mersha
+
+---

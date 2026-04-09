@@ -1,4 +1,5 @@
 // app/_components/FeaturedProjects.tsx
+// This section shows the featured projects grid on the homepage.
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, CodeXml, Globe } from "lucide-react";

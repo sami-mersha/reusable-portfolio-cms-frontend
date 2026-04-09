@@ -1,3 +1,4 @@
+// Small label component for statuses, categories, and metadata chips across the template.
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 

@@ -1,3 +1,4 @@
+// SEO and structured-data helpers live here so page files stay focused on rendering UI.
 import { PortfolioData, Project } from "./types";
 
 const FALLBACK_SITE_URL = "http://localhost:3000";
@@ -18,7 +19,7 @@ function unique(values: Array<string | null | undefined>) {
 
 export function getSiteUrl() {
   const configuredUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_HOME_URL ??
     process.env.SITE_URL ??
     process.env.VERCEL_PROJECT_PRODUCTION_URL;
 

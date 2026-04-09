@@ -1,3 +1,5 @@
+// This route renders one project details page based on the slug from the URL.
+// Keep the slug in sync with the backend/CMS so links from the homepage cards work.
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +17,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import PublicErrorState from "@/app/_components/PublicErrorState";
+import { buildUserFacingErrorState, logServerError } from "@/app/_lib/errors";
 import { getPortfolio, getProjectBySlug } from "@/app/_lib/portfolio";
 import {
   buildProjectJsonLd,
@@ -22,6 +26,7 @@ import {
   getCanonicalUrl,
   serializeJsonLd,
 } from "@/app/_lib/seo";
+import type { PortfolioData, Project } from "@/app/_lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -33,56 +38,94 @@ export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const data = await getPortfolio();
-  const project = data.projects.find((item) => item.slug === slug);
+  const canonicalUrl = getCanonicalUrl(`/projects/${slug}`);
 
-  if (!project) {
+  try {
+    const data = await getPortfolio();
+    const project = data.projects.find((item) => item.slug === slug);
+
+    if (!project) {
+      return {
+        title: "Project Not Found",
+        robots: {
+          index: false,
+          follow: false,
+        },
+      };
+    }
+
+    const description =
+      project.description.trim() || project.problem || project.solution;
+
     return {
-      title: "Project Not Found",
-      robots: {
-        index: false,
-        follow: false,
+      title: `${project.title} | ${data.profile.name}`,
+      description,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      keywords: buildProjectKeywords(project, data.profile.name),
+      openGraph: {
+        type: "article",
+        url: canonicalUrl,
+        title: project.title,
+        description,
+        siteName: data.profile.name,
+        images: project.image_url
+          ? [
+              {
+                url: project.image_url,
+                alt: project.title,
+              },
+            ]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: project.title,
+        description,
+        images: project.image_url ? [project.image_url] : undefined,
+      },
+    };
+  } catch (error) {
+    logServerError("Failed to generate project metadata", error);
+
+    return {
+      title: "Project | Portfolio",
+      description: "Project details from the portfolio.",
+      alternates: {
+        canonical: canonicalUrl,
       },
     };
   }
-
-  const canonicalUrl = getCanonicalUrl(`/projects/${project.slug}`);
-  const description = project.description.trim() || project.problem || project.solution;
-
-  return {
-    title: `${project.title} | ${data.profile.name}`,
-    description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    keywords: buildProjectKeywords(project, data.profile.name),
-    openGraph: {
-      type: "article",
-      url: canonicalUrl,
-      title: project.title,
-      description,
-      siteName: data.profile.name,
-      images: project.image_url
-        ? [
-            {
-              url: project.image_url,
-              alt: project.title,
-            },
-          ]
-        : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: project.title,
-      description,
-      images: project.image_url ? [project.image_url] : undefined,
-    },
-  };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const [data, project] = await Promise.all([getPortfolio(), getProjectBySlug(slug)]);
+  let data: PortfolioData;
+  let project: Project | null;
+
+  try {
+    [data, project] = await Promise.all([getPortfolio(), getProjectBySlug(slug)]);
+  } catch (error) {
+    const errorState = buildUserFacingErrorState(error, {
+      title: "Project details are temporarily unavailable",
+      publicMessage:
+        "We couldn't load this project right now. The backend service may be temporarily unavailable. Please try again shortly.",
+      debugMessage:
+        "The project page could not load backend data. Debug details are shown below.",
+      debugHint:
+        "Verify the backend response for /api/portfolio and confirm the requested project slug exists in the payload.",
+    });
+
+    return (
+      <PublicErrorState
+        title={errorState.title}
+        message={errorState.message}
+        hint={errorState.hint}
+        details={errorState.details}
+      />
+    );
+  }
 
   if (!project) {
     notFound();

@@ -1,4 +1,6 @@
+// This file serves a favicon from the portfolio API so each deployed portfolio can brand itself.
 import { getPortfolio } from "./_lib/portfolio";
+import { logServerError } from "./_lib/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +25,8 @@ export default async function Icon() {
         "Cache-Control": "no-store",
       },
     });
-  } catch {
+  } catch (error) {
+    logServerError("Failed to load dynamic favicon", error);
     return new Response(null, { status: 204 });
   }
 }

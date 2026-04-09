@@ -1,4 +1,6 @@
 // app/_components/CertificatesSection.tsx
+// This section displays certificate cards from the API response.
+// Remove or restyle it if your portfolio does not use certifications.
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";

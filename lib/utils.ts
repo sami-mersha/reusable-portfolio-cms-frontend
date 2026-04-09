@@ -1,3 +1,4 @@
+// Shared utility helpers that are small enough to be reused anywhere in the template.
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 

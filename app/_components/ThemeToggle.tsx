@@ -1,5 +1,6 @@
 "use client";
 
+// This client component switches between light and dark mode using next-themes.
 import { MoonStar, SunMedium } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";

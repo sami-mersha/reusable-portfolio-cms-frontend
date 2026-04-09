@@ -1,5 +1,6 @@
 "use client";
 
+// Thin wrapper around next-themes so the rest of the app has one shared theme provider.
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 

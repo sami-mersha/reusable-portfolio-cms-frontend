@@ -1,3 +1,4 @@
+/* Global theme tokens, layout styles, and reusable utility animations live here. */
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -136,4 +137,71 @@ body::after {
 
 .surface-glow {
   box-shadow: 0 18px 90px -48px rgba(15, 23, 42, 0.5);
+}
+
+@keyframes loader-sheen {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes loader-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-orbit-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes loader-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.loading-sheen {
+  background-color: color-mix(in oklab, var(--muted) 82%, var(--background) 18%);
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--muted) 88%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 72%, white 8%) 50%,
+    color-mix(in oklab, var(--muted) 88%, transparent) 100%
+  );
+  background-size: 220% 100%;
+  animation: loader-sheen 2.4s linear infinite;
+}
+
+.loading-orbit {
+  animation: loader-orbit 14s linear infinite;
+  transform-origin: center;
+}
+
+.loading-orbit-reverse {
+  animation: loader-orbit-reverse 18s linear infinite;
+  transform-origin: center;
+}
+
+.loading-float {
+  animation: loader-float 4s ease-in-out infinite;
 }

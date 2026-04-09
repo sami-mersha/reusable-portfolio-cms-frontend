@@ -1,3 +1,5 @@
+// These interfaces describe the shape of the portfolio API response.
+// Keep them in sync with the backend so TypeScript can protect your pages and components.
 export interface Profile {
   id: number;
   name: string;

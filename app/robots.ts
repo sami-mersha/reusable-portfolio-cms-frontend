@@ -1,3 +1,4 @@
+// This generates robots.txt from the current site URL and indexing rules.
 import type { MetadataRoute } from "next";
 
 import { getCanonicalUrl, shouldIndexSite } from "./_lib/seo";

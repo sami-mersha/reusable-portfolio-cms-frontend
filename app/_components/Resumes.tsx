@@ -1,4 +1,5 @@
 // app/_components/ResumesSection.tsx
+// This section highlights downloadable resumes pulled from the backend.
 import Link from "next/link";
 import { Download, FileText } from "lucide-react";
 

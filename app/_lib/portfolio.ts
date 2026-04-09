@@ -1,3 +1,4 @@
+// These helpers expose portfolio-specific data queries so pages do not talk to the raw API directly.
 import { cache } from "react";
 
 import { fetchPortfolio } from "./api";

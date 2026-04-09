@@ -1,4 +1,6 @@
 // app/page.tsx
+// This is the landing page for the template.
+// Beginners can swap sections in or out here without changing the shared layout.
 export const dynamic = 'force-dynamic';
 
 import Hero from './_components/Hero';
@@ -7,6 +9,8 @@ import Experiences from './_components/Experiences';
 import Skills from './_components/Skills';
 import Certificates from './_components/Certificates';
 import ResumesSection from './_components/Resumes';
+import PublicErrorState from './_components/PublicErrorState';
+import { buildUserFacingErrorState } from './_lib/errors';
 import { getPortfolio } from './_lib/portfolio';
 import { buildPortfolioJsonLd, serializeJsonLd } from './_lib/seo';
 
@@ -41,14 +45,23 @@ export default async function HomePage() {
       </>
     );
   } catch (err) {
-    console.error("Failed to load homepage portfolio data:", err);
+    const errorState = buildUserFacingErrorState(err, {
+      title: "Portfolio content is temporarily unavailable",
+      publicMessage:
+        "We couldn't load the homepage content right now. The backend service may be temporarily unavailable. Please try again shortly.",
+      debugMessage:
+        "The homepage could not load portfolio data. Debug details are shown below.",
+      debugHint:
+        "Make sure NEXT_PUBLIC_BASE_URL is correct and the backend responds to /api/portfolio.",
+    });
 
     return (
-      <section className="mx-auto max-w-4xl px-4 py-24 text-center">
-        <div className="rounded-[2rem] border border-destructive/20 bg-destructive/10 p-8 text-destructive">
-          Failed to load portfolio data. Please check the backend API and try again.
-        </div>
-      </section>
+      <PublicErrorState
+        title={errorState.title}
+        message={errorState.message}
+        hint={errorState.hint}
+        details={errorState.details}
+      />
     );
   }
 }

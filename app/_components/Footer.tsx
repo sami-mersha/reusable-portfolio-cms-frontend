@@ -1,3 +1,4 @@
+// The footer reuses profile fields from the API so each portfolio can show its own contact links.
 import type { ReactNode } from "react";
 import { ArrowUpRight, Link2, Mail, Phone } from "lucide-react";
 

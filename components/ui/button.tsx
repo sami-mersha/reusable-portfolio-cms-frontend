@@ -1,3 +1,4 @@
+// Reusable button primitive used across the template for consistent spacing and variants.
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";

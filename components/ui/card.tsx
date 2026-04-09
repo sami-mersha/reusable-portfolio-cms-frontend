@@ -1,3 +1,4 @@
+// Reusable card building blocks for consistent section and project layouts.
 import * as React from "react";
 
 import { cn } from "@/lib/utils";

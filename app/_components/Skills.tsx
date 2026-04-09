@@ -1,4 +1,5 @@
 // app/_components/SkillsSection.tsx
+// This section groups skills by category so the homepage reads more clearly.
 import { Skill } from "../_lib/types";
 import { Badge } from "@/components/ui/badge";
 import {

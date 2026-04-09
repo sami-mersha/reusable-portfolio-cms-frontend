@@ -1,3 +1,4 @@
+// The header provides in-page navigation for the homepage sections and a theme switcher.
 import Link from "next/link";
 import { Profile } from "../_lib/types";
 import ThemeToggle from "./ThemeToggle";

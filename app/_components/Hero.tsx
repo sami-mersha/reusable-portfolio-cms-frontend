@@ -1,4 +1,6 @@
 // app/_components/Hero.tsx
+// The hero is the main introduction block on the homepage.
+// Most first-time template customization happens by changing profile content rendered here.
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -115,7 +117,7 @@ export default function Hero({
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="#projects">
-                Explore Featured Work
+                Explore Featured Works
                 <ArrowRight className="size-4" />
               </Link>
             </Button>

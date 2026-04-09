@@ -1,4 +1,5 @@
 // app/_components/ExperiencesSection.tsx
+// This section renders the career timeline on the homepage.
 import { Experience } from "../_lib/types";
 import { Badge } from "@/components/ui/badge";
 import {

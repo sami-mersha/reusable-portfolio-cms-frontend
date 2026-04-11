@@ -37,7 +37,7 @@ export default function Skills({ skills }: { skills: Skill[] }) {
         {sortedGroups.map(([category, categorySkills]) => (
           <Card
             key={category}
-            className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45"
+            className="hover:scale-102 hover:shadow-lg transition-transform duration-300 surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45"
           >
             <CardHeader>
               <div className="flex items-center justify-between gap-3">

@@ -39,7 +39,7 @@ export default function Experiences({ experiences }: { experiences: Experience[]
           <div key={exp.id} className="relative pb-8 last:pb-0">
             <span className="absolute -left-[1.62rem] top-8 size-3.5 rounded-full border-4 border-background bg-primary shadow-md md:-left-[2.45rem] md:size-4" />
 
-            <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
+            <Card className="hover:scale-101 hover:shadow-lg transition-transform duration-300 surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
               <CardHeader className="gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-3">

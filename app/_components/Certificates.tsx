@@ -30,6 +30,10 @@ export default function Certificates({
     );
   }
 
+  const sortedCertificates = [...certificates].sort(
+    (a, b) => new Date(b.issue_date).getTime() - new Date(a.issue_date).getTime()
+  );
+
   return (
     <section id="certificates" className="mx-auto max-w-6xl px-4">
       <div className="mb-10 space-y-3">
@@ -42,7 +46,7 @@ export default function Certificates({
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {certificates.map((cert) => (
+        {sortedCertificates.map((cert) => (
           <Card
             key={cert.id}
             className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45 hover:scale-102 transition-transform duration-300"

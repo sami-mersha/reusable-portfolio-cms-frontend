@@ -30,7 +30,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
       <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3">
           <Badge variant="outline" className="w-fit">
-            Selected Work
+            Selected Works
           </Badge>
           <h2 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
             Projects shaped around outcomes, reliability, and user-facing value.

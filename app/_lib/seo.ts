@@ -1,5 +1,6 @@
 // SEO and structured-data helpers live here so page files stay focused on rendering UI.
-import { PortfolioData, Project } from "./types";
+import { getBlogDescription } from "./blogs";
+import { Blog, BlogDetail, PortfolioData, Project } from "./types";
 
 const FALLBACK_SITE_URL = "http://localhost:3000";
 
@@ -305,6 +306,130 @@ export function buildProjectJsonLd(
         mainEntityOfPage: projectUrl,
         datePublished: project.created_at,
         dateModified: project.updated_at,
+      },
+    ],
+  };
+}
+
+export function buildBlogKeywords(blog: Blog | BlogDetail, profileName?: string) {
+  return unique([
+    blog.title,
+    blog.excerpt,
+    blog.meta_title,
+    blog.meta_description,
+    blog.category?.name,
+    blog.category?.slug,
+    profileName,
+  ]);
+}
+
+export function buildBlogCollectionJsonLd(
+  blogs: Blog[],
+  options: {
+    page?: number;
+    profileName?: string;
+  } = {},
+) {
+  const page = options.page ?? 1;
+  const listingUrl = getCanonicalUrl(page > 1 ? `/blogs?page=${page}` : "/blogs");
+  const profileName = options.profileName;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${listingUrl}#collection`,
+        url: listingUrl,
+        name: profileName ? `${profileName} Blog` : "Blog",
+        description: "Articles, notes, and project lessons from the portfolio.",
+        isPartOf: {
+          "@type": "WebSite",
+          url: getCanonicalUrl("/"),
+        },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${listingUrl}#posts`,
+        name: "Blog Posts",
+        itemListElement: blogs.map((blog, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "BlogPosting",
+            headline: blog.title,
+            description: getBlogDescription(blog),
+            url: getCanonicalUrl(`/blogs/${blog.slug}`),
+            image: blog.cover_image,
+            datePublished: blog.published_at ?? blog.created_at,
+            dateModified: blog.updated_at,
+            articleSection: blog.category?.name ?? undefined,
+            keywords: buildBlogKeywords(blog, profileName),
+          },
+        })),
+      },
+    ],
+  };
+}
+
+export function buildBlogJsonLd(blog: BlogDetail, profileName?: string) {
+  const blogUrl = getCanonicalUrl(`/blogs/${blog.slug}`);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${blogUrl}#breadcrumbs`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: getCanonicalUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Blogs",
+            item: getCanonicalUrl("/blogs"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: blog.title,
+            item: blogUrl,
+          },
+        ],
+      },
+      {
+        "@type": "BlogPosting",
+        "@id": `${blogUrl}#post`,
+        url: blogUrl,
+        mainEntityOfPage: blogUrl,
+        headline: blog.title,
+        alternativeHeadline: blog.meta_title || undefined,
+        description: getBlogDescription(blog),
+        articleSection: blog.category?.name ?? undefined,
+        image: blog.cover_image,
+        datePublished: blog.published_at ?? blog.created_at,
+        dateModified: blog.updated_at,
+        author: profileName
+          ? {
+              "@type": "Person",
+              name: profileName,
+              url: getCanonicalUrl("/"),
+            }
+          : undefined,
+        publisher: profileName
+          ? {
+              "@type": "Person",
+              name: profileName,
+              url: getCanonicalUrl("/"),
+            }
+          : undefined,
+        commentCount: blog.comments.length,
+        keywords: buildBlogKeywords(blog, profileName),
       },
     ],
   };

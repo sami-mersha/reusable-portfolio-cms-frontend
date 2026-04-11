@@ -1,34 +1,35 @@
 # Reusable Portfolio CMS Frontend
 
-A modern, production-ready portfolio frontend built with **Next.js (App Router)** and **shadcn/ui**, designed to dynamically render portfolio content from a CMS backend API.
+A modern, production-ready portfolio and blog frontend built with Next.js (App Router) and shadcn/ui, designed to dynamically render content from a CMS backend API.
 
-This project depends on the backend:
-
-👉 https://github.com/sami-mersha/reusable-portfolio-cms-backend
-
----
-
-## 🚀 Overview
-
-This application is a **dynamic portfolio renderer** that consumes structured data from an API and builds a complete personal portfolio website.
-
-It is designed with:
-
-* **Separation of concerns** (Frontend ↔ Backend)
-* **Reusability** (plug different data, same UI)
-* **Scalability** (modular sections)
-* **Production-readiness** (error handling, loading states)
+Backend dependency:
+https://github.com/sami-mersha/reusable-portfolio-cms-backend
 
 ---
 
-## 🧩 Core Features
+## Overview
 
-* Dynamic Hero section (profile, branding, social links)
+This application is a dynamic portfolio + blog renderer that consumes structured data from an API and builds a complete personal portfolio website.
+
+Design goals:
+* Separation of concerns (Frontend ↔ Backend)
+* Reusability (plug different data, same UI)
+* Scalability (modular sections)
+* Production-readiness (error handling, loading states)
+
+---
+
+## Core Features
+
+* Dynamic hero section (profile, branding, social links)
 * Skills grouped by category
 * Experience timeline (sorted, highlight-based)
 * Featured projects showcase
 * Certificates display
 * Resume download/view
+* Blog archive with pagination
+* Blog detail pages with comments
+* Blog search (server-backed)
 * Responsive UI (mobile-first)
 * Dark mode support
 * Section-level error handling
@@ -36,41 +37,17 @@ It is designed with:
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
-* **Next.js (App Router)**
-* **React Server Components**
-* **Tailwind CSS**
-* **shadcn/ui**
-* **TypeScript**
-
----
-
-## 🔗 Backend Dependency
-
-This frontend **does not work standalone**.
-
-It consumes data from:
-
-👉 https://github.com/sami-mersha/reusable-portfolio-cms-backend
-
-### Key API Characteristics
-
-* Single aggregated endpoint for portfolio data
-* Media served via `/storage`
-* Structured JSON response
-* Supports:
-
-  * Profile (with favicon, contact info, linktree)
-  * Projects & Featured Projects
-  * Skills (categorized)
-  * Experiences (ordered, visibility controlled)
-  * Certificates
-  * Resumes
+* Next.js (App Router)
+* React Server Components
+* Tailwind CSS
+* shadcn/ui
+* TypeScript
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 Create `.env.local`:
 
@@ -80,8 +57,6 @@ NEXT_PUBLIC_HOME_URL=http://localhost:3000
 NEXT_PUBLIC_DEBUG=false
 ```
 
-### Description
-
 | Variable             | Purpose              |
 | -------------------- | -------------------- |
 | NEXT_PUBLIC_BASE_URL | Backend API base URL |
@@ -90,7 +65,7 @@ NEXT_PUBLIC_DEBUG=false
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 git clone https://github.com/sami-mersha/reusable-portfolio-cms-frontend.git
@@ -101,7 +76,7 @@ npm install
 
 ---
 
-## ▶️ Run Development Server
+## Run Development Server
 
 ```bash
 npm run dev
@@ -115,7 +90,7 @@ http://localhost:3000
 
 ---
 
-## 🔄 Data Fetching Flow
+## Data Fetching Flow
 
 1. UI sections call:
 
@@ -142,76 +117,88 @@ Each section handles its own failure independently.
 
 ---
 
-## 📁 Project Structure
+## Blog Endpoints Used
+
+* Archive: `GET /api/blogs?page=1`
+* Search: `GET /api/blogs/search?q=keyword`
+* Detail: `GET /api/blogs/{slug}`
+* Comments: `POST /api/comments`
+
+---
+
+## Project Structure
 
 ```bash
 app/
  ├── _components/
- │    ├── Hero.tsx
- │    ├── Skills.tsx
- │    ├── Experiences.tsx
- │    ├── Projects.tsx
+ │    ├── BlogCard.tsx
+ │    ├── BlogCommentForm.tsx
+ │    ├── BlogPagination.tsx
  │    ├── Certificates.tsx
- │    ├── Resumes.tsx
+ │    ├── Experiences.tsx
+ │    ├── FeaturedBlogs.tsx
+ │    ├── Footer.tsx
  │    ├── Header.tsx
- │    └── Footer.tsx
+ │    ├── Hero.tsx
+ │    ├── PortfolioLoading.tsx
+ │    ├── Projects.tsx
+ │    ├── PublicErrorState.tsx
+ │    ├── Resumes.tsx
+ │    ├── Skills.tsx
+ │    └── ThemeToggle.tsx
  │
  ├── _lib/
- │    ├── portfolio.ts   # API abstraction layer
+ │    ├── api.ts         # API abstraction layer
+ │    ├── blogs.ts       # Blog helpers + search
+ │    ├── debug.ts       # Debug flag helper
+ │    ├── errors.ts      # Error helpers
+ │    ├── portfolio.ts   # Portfolio helpers
+ │    ├── sanitize.ts    # HTML sanitization
+ │    ├── seo.ts         # Metadata + JSON-LD helpers
  │    └── types.ts       # Type definitions
  │
+ ├── blogs/
+ │    ├── [slug]/
+ │    │    ├── loading.tsx
+ │    │    └── page.tsx
+ │    ├── actions.ts
+ │    ├── BlogSearchBar.tsx
+ │    ├── comment-form-state.ts
+ │    ├── loading.tsx
+ │    └── page.tsx
+ │
+ ├── projects/
+ │    └── [slug]/
+ │         └── page.tsx
+ │
+ ├── error.tsx
+ ├── global-error.tsx
+ ├── globals.css
+ ├── icon.ts
  ├── layout.tsx
- └── page.tsx
+ ├── loading.tsx
+ ├── page.tsx
+ ├── robots.ts
+ └── sitemap.ts
 ```
 
 ---
 
-## 🧠 Design Principles
+## Important Notes
 
-### 1. Server-First Rendering
-
-* Uses async server components
-* Improves SEO and performance
-
-### 2. Centralized API Layer
-
-* All fetching logic lives in one place
-* Easy to switch backend or extend
-
-### 3. Strong Typing
-
-* Prevents runtime errors
-* Improves maintainability
-
-### 4. Fault Isolation
-
-* Each section handles:
-
-  * Errors
-  * Empty states
-  * Loading states
-
-### 5. Clean UI Architecture
-
-* Component-based layout
-* Easily extendable sections
-
----
-
-## ⚠️ Important Notes
-
-* Backend must be running before frontend
-* Ensure backend CORS is configured
+* Backend must be running before frontend.
+* Ensure backend CORS is configured.
 * Media files require:
 
   ```bash
   php artisan storage:link
   ```
-* Invalid or missing API data will trigger graceful UI fallbacks
+
+* Blog HTML is sanitized on the frontend for safety.
 
 ---
 
-## 📦 Production Build
+## Production Build
 
 ```bash
 npm run build
@@ -220,18 +207,17 @@ npm start
 
 ---
 
-## 🔮 Future Enhancements
+## Production Checklist
 
-* Multi-tenant portfolio support
-* Dynamic routing per user
-* Theme customization
-* CMS-driven layout configuration
-* Internationalization (i18n)
-* Analytics integration
+* Set real production URLs in your host env vars
+* Update `next.config.ts` with production image domains
+* Confirm API endpoints respond quickly in production
+* Disable debug mode (`NEXT_PUBLIC_DEBUG=false`)
+* Optional: enable caching/revalidation for faster TTFB
 
 ---
 
-## 🤝 Contribution
+## Contribution
 
 This project is structured for extensibility. You can contribute by:
 
@@ -242,13 +228,13 @@ This project is structured for extensibility. You can contribute by:
 
 ---
 
-## 📄 License
+## License
 
 MIT License
 
 ---
 
-## 👤 Author
+## Author
 
 Samuel Mersha
 

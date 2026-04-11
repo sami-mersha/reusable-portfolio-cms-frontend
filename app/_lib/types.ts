@@ -86,6 +86,84 @@ export interface Resume {
   updated_at: string;
 }
 
+export interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogComment {
+  id: number;
+  blog_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  comment: string;
+  is_approved: boolean | number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_image: string;
+  is_published: boolean;
+  published_at: string | null;
+  meta_title: string;
+  meta_description: string;
+  created_at: string;
+  updated_at: string;
+  category_id: number | null;
+  comments_count?: number;
+  category: BlogCategory | null;
+}
+
+export interface BlogDetail extends Blog {
+  comments: BlogComment[];
+}
+
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  page: number | null;
+  active: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number | null;
+  last_page: number;
+  last_page_url: string;
+  links: PaginationLink[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number | null;
+  total: number;
+}
+
+export interface BlogCommentSubmission {
+  blog_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  comment: string;
+}
+
+export interface BlogCommentSubmissionResponse {
+  message: string;
+  data: BlogComment;
+}
+
 export interface PortfolioData {
   profile: Profile;
   projects: Project[];

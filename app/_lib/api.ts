@@ -3,29 +3,57 @@
 // If you move to a different API structure, start your data integration changes here first.
 import { PortfolioApiError, logServerError } from "./errors";
 
-export async function fetchPortfolio<T>(): Promise<T> {
+function resolveApiBaseUrl() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.trim().replace(/\/+$/, "");
-  const url = baseUrl ? `${baseUrl}/api/portfolio` : undefined;
 
-  if (!url) {
+  if (!baseUrl) {
     const error = new PortfolioApiError(
-      "NEXT_PUBLIC_BASE_URL is not defined. The portfolio API URL could not be resolved.",
+      "NEXT_PUBLIC_BASE_URL is not defined. The backend API URL could not be resolved.",
       { source: "NEXT_PUBLIC_BASE_URL" },
     );
 
-    logServerError("Portfolio fetch failed", error);
+    logServerError("API base URL resolution failed", error);
     throw error;
   }
 
+  return baseUrl;
+}
+
+function buildApiUrl(path: string) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return `${resolveApiBaseUrl()}${normalizedPath}`;
+}
+
+export async function fetchFromApi<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
+  const url = buildApiUrl(path);
+  const method = init.method?.toUpperCase() ?? "GET";
+  const headers = new Headers(init.headers);
+
+  if (!headers.has("Accept")) {
+    headers.set("Accept", "application/json");
+  }
+
+  const requestInit: RequestInit = {
+    ...init,
+    headers,
+  };
+
+  if (method === "GET" && !requestInit.cache) {
+    requestInit.cache = "no-store";
+  }
+
   try {
-    // The frontend is meant to always reflect the latest CMS/API data in this template.
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, requestInit);
 
     if (!res.ok) {
       const errorText = await res.text();
 
       throw new PortfolioApiError(
-        `Portfolio API responded with ${res.status}.${errorText ? ` Response: ${errorText}` : ""}`,
+        `API request to ${path} responded with ${res.status}.${errorText ? ` Response: ${errorText}` : ""}`,
         {
           source: url,
           status: res.status,
@@ -35,16 +63,34 @@ export async function fetchPortfolio<T>(): Promise<T> {
 
     return (await res.json()) as T;
   } catch (err) {
-    // Normalize transport/runtime failures into one error shape for page and metadata fallbacks.
     const normalizedError =
       err instanceof PortfolioApiError
         ? err
-        : new PortfolioApiError(`Unable to reach the portfolio API at ${url}.`, {
+        : new PortfolioApiError(`Unable to reach the backend API at ${url}.`, {
             cause: err,
             source: url,
           });
 
-    logServerError("Portfolio fetch failed", normalizedError);
+    logServerError("API request failed", normalizedError);
     throw normalizedError;
   }
+}
+
+export async function postToApi<T>(path: string, body: unknown, init: RequestInit = {}) {
+  const headers = new Headers(init.headers);
+
+  if (!headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  return fetchFromApi<T>(path, {
+    ...init,
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+}
+
+export async function fetchPortfolio<T>(): Promise<T> {
+  return fetchFromApi<T>("/api/portfolio");
 }

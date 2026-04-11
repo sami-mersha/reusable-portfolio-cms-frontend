@@ -4,12 +4,13 @@ import { Profile } from "../_lib/types";
 import ThemeToggle from "./ThemeToggle";
 
 const navItems = [
-  { href: "#hero", label: "Home" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experiences", label: "Experience" },
-  { href: "#skills", label: "Skills" },
-  { href: "#certificates", label: "Certificates" },
-  { href: "#resumes", label: "Resume" },
+  { href: "/", label: "Home" },
+  { href: "/#projects", label: "Projects" },
+  { href: "/#experiences", label: "Experience" },
+  { href: "/blogs", label: "Blogs" },
+  { href: "/#skills", label: "Skills" },
+  { href: "/#certificates", label: "Certificates" },
+  { href: "/#resumes", label: "Resume" },
 ];
 
 export default function Header({ profile }: { profile: Profile }) {
@@ -17,7 +18,7 @@ export default function Header({ profile }: { profile: Profile }) {
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
       <div className="mx-auto max-w-6xl rounded-[2rem] border border-border/60 bg-background/45 px-4 shadow-[0_18px_64px_-42px_rgba(15,23,42,0.55)] backdrop-blur-xl">
         <div className="flex items-center gap-4 py-4">
-          <Link href={`${process.env.NEXT_PUBLIC_HOME_URL}`} className="min-w-0">
+          <Link href="/" className="min-w-0">
             <div className="flex flex-col">
               <span className="text-[0.65rem] font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 {profile.title || "Portfolio"}

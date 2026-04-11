@@ -139,6 +139,84 @@ body::after {
   box-shadow: 0 18px 90px -48px rgba(15, 23, 42, 0.5);
 }
 
+.blog-content {
+  color: color-mix(in oklab, var(--foreground) 84%, var(--muted-foreground) 16%);
+  line-height: 1.9;
+}
+
+.blog-content > :first-child {
+  margin-top: 0;
+}
+
+.blog-content > :last-child {
+  margin-bottom: 0;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  margin-top: 2rem;
+  margin-bottom: 0.9rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+
+.blog-content h1 {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.blog-content h2 {
+  font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+}
+
+.blog-content h3 {
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+}
+
+.blog-content p,
+.blog-content ul,
+.blog-content ol,
+.blog-content blockquote,
+.blog-content pre,
+.blog-content table,
+.blog-content hr {
+  margin: 1rem 0;
+}
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.35rem;
+}
+
+.blog-content li + li {
+  margin-top: 0.55rem;
+}
+
+.blog-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid color-mix(in oklab, var(--primary) 35%, transparent);
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+
+.blog-content hr {
+  border: 0;
+  border-top: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+}
+
+.blog-content img {
+  border-radius: calc(var(--radius) - 0.15rem);
+}
+
 @keyframes loader-sheen {
   0% {
     background-position: 200% 0;

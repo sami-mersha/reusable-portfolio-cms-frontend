@@ -4,19 +4,29 @@
 export const dynamic = 'force-dynamic';
 
 import Hero from './_components/Hero';
+import FeaturedBlogs from './_components/FeaturedBlogs';
 import FeaturedProjects from './_components/Projects';
 import Experiences from './_components/Experiences';
 import Skills from './_components/Skills';
 import Certificates from './_components/Certificates';
 import ResumesSection from './_components/Resumes';
 import PublicErrorState from './_components/PublicErrorState';
-import { buildUserFacingErrorState } from './_lib/errors';
+import { buildUserFacingErrorState, logServerError } from './_lib/errors';
+import { getFeaturedBlogs } from './_lib/blogs';
 import { getPortfolio } from './_lib/portfolio';
 import { buildPortfolioJsonLd, serializeJsonLd } from './_lib/seo';
 
 export default async function HomePage() {
   try {
     const data = await getPortfolio();
+    let featuredBlogs: string | any[] = [];
+
+    try {
+      featuredBlogs = await getFeaturedBlogs();
+    } catch (error) {
+      logServerError("Failed to load featured blogs", error);
+    }
+
     const currentRole =
       data.experiences.find((experience) => experience.is_current)?.role ??
       "Software Engineer";
@@ -38,6 +48,7 @@ export default async function HomePage() {
           />
           <FeaturedProjects projects={data.featured_projects} />
           <Experiences experiences={data.experiences} />
+          {featuredBlogs.length > 0 ? <FeaturedBlogs blogs={featuredBlogs} /> : null}
           <Skills skills={data.skills} />
           <Certificates certificates={data.certificates} />
           <ResumesSection resumes={data.resumes} />

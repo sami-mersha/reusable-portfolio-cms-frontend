@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...(portfolioData?.projects.map((project) => project.image_url) ?? []),
       ...(portfolioData?.certificates.map((certificate) => certificate.image_url) ?? []),
       ...blogs.map((blog) => blog.cover_image),
-    ].filter(Boolean);
+    ].filter((image): image is string => Boolean(image));
 
     const entries: MetadataRoute.Sitemap = [
       {
@@ -80,7 +80,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: latestBlogUpdate ? new Date(latestBlogUpdate) : new Date(),
         changeFrequency: "weekly",
         priority: 0.7,
-        images: blogs.map((blog) => blog.cover_image).filter(Boolean),
+        images: blogs
+          .map((blog) => blog.cover_image)
+          .filter((image): image is string => Boolean(image)),
       });
 
       entries.push(

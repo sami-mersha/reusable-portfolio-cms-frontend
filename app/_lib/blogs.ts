@@ -57,35 +57,36 @@ export const getBlogsPage = cache(
 
 export const searchBlogs = cache(
   async (query: string, page = 1): Promise<PaginatedResponse<Blog>> => {
-  const trimmed = query.trim();
+    const trimmed = query.trim();
 
-  // Return an empty pagination shape so pages can render consistently.
-  if (!trimmed) {
-    return {
-      current_page: 1,
-      data: [],
-      first_page_url: "",
-      from: null,
-      last_page: 1,
-      last_page_url: "",
-      links: [],
-      next_page_url: null,
-      path: "",
-      per_page: 10,
-      prev_page_url: null,
-      to: null,
-      total: 0,
-    };
-  }
+    // Return an empty pagination shape so pages can render consistently.
+    if (!trimmed) {
+      return {
+        current_page: 1,
+        data: [],
+        first_page_url: "",
+        from: null,
+        last_page: 1,
+        last_page_url: "",
+        links: [],
+        next_page_url: null,
+        path: "",
+        per_page: 10,
+        prev_page_url: null,
+        to: null,
+        total: 0,
+      };
+    }
 
-  return fetchFromApi<PaginatedResponse<Blog>>(getSearchEndpoint(trimmed, page));
-});
+    return fetchFromApi<PaginatedResponse<Blog>>(getSearchEndpoint(trimmed, page));
+  },
+);
 
 // Homepage helper: grab the first two posts from page 1.
 export const getFeaturedBlogs = cache(async (): Promise<Blog[]> => {
   const { data } = await getBlogsPage(1);
 
-  return data.slice(0, 2);
+  return hydrateBlogsWithVerifiedCommentCounts(data.slice(0, 2));
 });
 
 // Sitemap helper: load all pages when you need every blog.
@@ -168,4 +169,38 @@ export function getBlogReadTime(content: string) {
 
 export function isApprovedComment(isApproved: boolean | number) {
   return isApproved === true || isApproved === 1;
+}
+
+export function getVerifiedCommentCount(
+  blog: Partial<Pick<Blog, "comments_count">> & Partial<Pick<BlogDetail, "comments">>,
+) {
+  if (Array.isArray(blog.comments)) {
+    return blog.comments.filter((comment) => isApprovedComment(comment.is_approved)).length;
+  }
+
+  return blog.comments_count ?? 0;
+}
+
+const getVerifiedCommentCountBySlug = cache(async (slug: string) => {
+  const blog = await getBlogBySlug(slug);
+
+  return blog ? getVerifiedCommentCount(blog) : 0;
+});
+
+export async function hydrateBlogsWithVerifiedCommentCounts(blogs: Blog[]) {
+  const commentCounts = await Promise.all(
+    blogs.map(async (blog) => {
+      try {
+        // Archive payloads only expose total comments, so enrich cards from the detail endpoint.
+        return await getVerifiedCommentCountBySlug(blog.slug);
+      } catch {
+        return getVerifiedCommentCount(blog);
+      }
+    }),
+  );
+
+  return blogs.map((blog, index) => ({
+    ...blog,
+    comments_count: commentCounts[index],
+  }));
 }

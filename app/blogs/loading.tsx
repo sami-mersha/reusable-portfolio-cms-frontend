@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 export default function Loading() {
   return (
@@ -11,13 +11,15 @@ export default function Loading() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 sm:gap-6 lg:grid-cols-2">
         {Array.from({ length: 4 }).map((_, index) => (
           <Card
             key={`blog-skeleton-${index}`}
             className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45"
           >
-            <div className="grid gap-6 p-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="grid gap-5 p-4 sm:gap-6 sm:p-6 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="loading-sheen order-first aspect-[16/10] w-full rounded-[1.25rem] lg:order-none lg:rounded-[1.5rem]" />
+
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   <div className="loading-sheen h-5 w-20 rounded-full" />
@@ -32,8 +34,6 @@ export default function Loading() {
                 </div>
                 <div className="loading-sheen h-9 w-32 rounded-full" />
               </div>
-
-              <div className="loading-sheen h-44 w-full rounded-[1.5rem]" />
             </div>
           </Card>
         ))}

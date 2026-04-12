@@ -20,6 +20,7 @@ import {
   getBlogsPage,
   getBlogReadTime,
   getBlogSummary,
+  getVerifiedCommentCount,
   isApprovedComment,
 } from "@/app/_lib/blogs";
 import { buildUserFacingErrorState, logServerError } from "@/app/_lib/errors";
@@ -129,6 +130,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     const approvedComments = blog.comments.filter((comment) =>
       isApprovedComment(comment.is_approved),
     );
+    const verifiedCommentCount = getVerifiedCommentCount(blog);
     // Related posts are pulled from page 1 of the archive and filtered by category.
     const relatedPosts =
       blogPage?.data.filter((item) => {
@@ -168,7 +170,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           <div className="grid gap-10">
             <div className="space-y-6">
               <div className="space-y-4">
-                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">
                   {blog.title}
                 </h1>
                 <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
@@ -203,13 +205,15 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
                 <CardContent className="p-6">
                   <div className="mb-6 space-y-2">
-                    <h2 className="text-2xl font-semibold tracking-tight">Comments</h2>
+                    <h2 className="text-2xl font-semibold tracking-tight">Verified comments</h2>
                     <p className="text-sm leading-6 text-muted-foreground">
-                      Comments from readers
+                      {verifiedCommentCount > 0
+                        ? `${verifiedCommentCount} approved ${verifiedCommentCount === 1 ? "reader comment is" : "reader comments are"} visible below.`
+                        : "Only approved reader comments are shown here."}
                     </p>
                   </div>
 
-                  {approvedComments.length > 0 ? (
+                  {verifiedCommentCount > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2">
                       {approvedComments.map((comment) => {
                         const initials = `${comment.first_name?.[0] ?? ""}${comment.last_name?.[0] ?? ""}`.toUpperCase();
@@ -302,7 +306,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
             <div className="grid gap-6 lg:grid-cols-2">
               <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
                 <CardContent className="grid gap-4 p-6 text-sm text-muted-foreground">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <span className="inline-flex items-center gap-2">
                       <CalendarDays className="size-4 text-primary" />
                       Published
@@ -312,7 +316,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <span className="inline-flex items-center gap-2">
                       <Clock3 className="size-4 text-primary" />
                       Read time
@@ -322,17 +326,17 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <span className="inline-flex items-center gap-2">
                       <MessageSquareText className="size-4 text-primary" />
-                      Comments
+                      Verified comments
                     </span>
                     <span className="font-medium text-foreground">
-                      {approvedComments.length}
+                      {verifiedCommentCount}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <span className="inline-flex items-center gap-2">
                       <FolderOpen className="size-4 text-primary" />
                       Category
@@ -347,7 +351,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
                 <CardContent className="grid gap-4 p-6">
                   <p className="text-sm leading-7 text-muted-foreground">
-                    Stay in the flow and keep reading — explore more posts or return to the
+                    Stay in the flow and keep reading. Explore more posts or return to the
                     portfolio homepage.
                   </p>
 

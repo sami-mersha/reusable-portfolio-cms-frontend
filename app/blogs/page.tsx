@@ -5,7 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import BlogCard from "@/app/_components/BlogCard";
 import BlogPagination from "@/app/_components/BlogPagination";
 import PublicErrorState from "@/app/_components/PublicErrorState";
-import { getBlogsPage, searchBlogs } from "@/app/_lib/blogs";
+import {
+  getBlogsPage,
+  hydrateBlogsWithVerifiedCommentCounts,
+  searchBlogs,
+} from "@/app/_lib/blogs";
 import { buildUserFacingErrorState, logServerError } from "@/app/_lib/errors";
 import { getPortfolio } from "@/app/_lib/portfolio";
 import {
@@ -121,7 +125,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
     ]);
     const profileName = portfolio?.profile.name;
     const activePagination = query && searchPagination ? searchPagination : pagination;
-    const displayBlogs = activePagination.data;
+    const displayBlogs = await hydrateBlogsWithVerifiedCommentCounts(activePagination.data);
     const jsonLd = buildBlogCollectionJsonLd(displayBlogs, {
       page: activePagination.current_page,
       profileName,
@@ -147,7 +151,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
               <Badge variant="outline" className="w-fit">
                 Blog Archive
               </Badge>
-              <h1 className="max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl">
+              <h1 className="max-w-4xl text-3xl font-semibold tracking-tight sm:text-5xl">
                 A growing archive of notes on technology, ideas, systems, and lessons from life.
               </h1>
               <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
@@ -162,7 +166,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
 
           {displayBlogs.length > 0 ? (
             <>
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-5 sm:gap-6 lg:grid-cols-2">
                 {displayBlogs.map((blog, index) => (
                   <BlogCard
                     key={blog.id}

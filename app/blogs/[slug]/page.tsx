@@ -178,28 +178,28 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
                 </p>
               </div>
 
-              <Card className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45">
-                <div className="relative overflow-hidden">
+              <div className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45">
+                <div className="relative overflow-hidden flex items-center justify-center">
                   {blog.cover_image ? (
                     <img
                       src={blog.cover_image}
                       alt={blog.title}
                       loading="lazy"
-                      className="h-auto w-full object-contain"
+                      className="h-[90vh] w-auto object-contain"
                     />
                   ) : (
-                    <div className="aspect-[16/10] w-full bg-gradient-to-br from-amber-100 via-white to-sky-100 dark:from-amber-400/20 dark:via-slate-950 dark:to-sky-400/20" />
+                    <div className="h-[90vh] w-auto bg-gradient-to-br from-amber-100 via-white to-sky-100 dark:from-amber-400/20 dark:via-slate-950 dark:to-sky-400/20" />
                   )}
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-background/70 dark:to-slate-950/60" />
                 </div>
-                <CardContent className="p-6 sm:p-8">
+                <div className="p-6 sm:p-8">
                   {/* Blog content comes from the CMS and is rendered as HTML. */}
                   <article
                     className="blog-content"
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content) }}
                   />
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Comments sit directly after the article to match reading order. */}
               <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">

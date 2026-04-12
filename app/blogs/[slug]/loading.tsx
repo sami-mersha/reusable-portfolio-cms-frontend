@@ -4,6 +4,7 @@ export default function Loading() {
   return (
     <section className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:pb-20 sm:pt-10">
       <div className="mb-8 flex flex-wrap items-center gap-3">
+        <div className="loading-sheen h-9 w-32 rounded-full" />
         <div className="loading-sheen h-5 w-28 rounded-full" />
         <div className="loading-sheen h-5 w-24 rounded-full" />
       </div>
@@ -14,18 +15,15 @@ export default function Loading() {
           <div className="loading-sheen h-5 w-full max-w-2xl rounded-full" />
         </div>
 
-        <Card className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45">
+        <div className="surface-glow overflow-hidden border-white/40 bg-white/70 dark:bg-slate-950/45">
           <div className="loading-sheen h-72 w-full" />
-        </Card>
-
-        <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
-          <CardContent className="space-y-4 p-6 sm:p-8">
+          <div className="space-y-4 p-6 sm:p-8">
             <div className="loading-sheen h-4 w-full rounded-full" />
             <div className="loading-sheen h-4 w-11/12 rounded-full" />
             <div className="loading-sheen h-4 w-10/12 rounded-full" />
             <div className="loading-sheen h-4 w-9/12 rounded-full" />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         <Card className="surface-glow border-white/40 bg-white/70 dark:bg-slate-950/45">
           <CardContent className="space-y-4 p-6">

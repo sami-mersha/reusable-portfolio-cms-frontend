@@ -47,6 +47,9 @@ export default function Experiences({ experiences }: { experiences: Experience[]
                     <Badge variant={exp.is_current ? "default" : "secondary"}>
                       {exp.is_current ? "Current" : "Previous"}
                     </Badge>
+                    <Badge variant="outline">
+                      {exp.employment_type === "full_time" ? "Full Time" : exp.employment_type === "part_time" ? "Part Time" : exp.employment_type}
+                    </Badge>
                   </div>
                   <CardDescription className="text-base">
                     {exp.organization} - {exp.location}
